@@ -1,14 +1,18 @@
-require 'pp'
+def circular_peek(step, position, captcha)
+  captcha[(position+step)%captcha.length-1].to_i
+end
+
+def solve_captcha_num(step, captcha)
+  captcha.length.times.inject 0 do |acc, i|
+    match = captcha[i].to_i.eql? circular_peek(step, i+1, captcha)
+    acc + (match ? (captcha[i].to_i):0)
+  end
+end
 
 def solve_captcha(captcha)
-  sum = 0
-  acc = 0
-  prev = 'a'
-  captcha.each_char do |c|
-    c = c.to_i
-    if c.eql? prev then acc += c else sum += acc end
-    prev = c
-  end
-  if captcha[-1].eql? captcha[0] then acc += captcha[0].to_i end
-  acc
+  solve_captcha_num 1, captcha
+end
+
+def solve_captcha2(captcha)
+  solve_captcha_num (captcha.length/2), captcha
 end
